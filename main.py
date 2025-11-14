@@ -45,6 +45,9 @@ async def on_guild_remove(guild):
 async def on_message(message):
   print(f'Message from {message.author}: {message.content}')
 
+  if message.author == client.user:
+    return
+
   r = requests.post(
     os.getenv('API_URL') + '/moderate',
     json={
@@ -58,10 +61,11 @@ async def on_message(message):
     }
   )
 
-  print('Moderation results:', r.json())
-
-  if message.author == client.user:
-    return
+  results = r.json()
+  
+  if results["moderate"] == True:
+    await message.delete()
+    await message.channel.send('<@' + str(message.author.id) + "> message moderated")
 
   if message.content.startswith('!hello'):
     await message.channel.send('Hello! How can I assist you today?')
