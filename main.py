@@ -56,7 +56,7 @@ async def on_message(message):
         'message_id': message.id,
         'author_id': message.author.id,
         'author_name': message.author.global_name,
-        'guild_id': message.guild.id
+        'guild_id': str(message.guild.id)
       }
     }
   )
@@ -65,7 +65,7 @@ async def on_message(message):
   
   if results["moderate"] == True:
     await message.delete()
-    await message.channel.send('<@' + str(message.author.id) + "> message moderated")
+    await message.channel.send('<@' + str(message.author.id) + "> " + results["moderation_message"])
 
   if message.content.startswith('!hello'):
     await message.channel.send('Hello! How can I assist you today?')
